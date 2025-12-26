@@ -72,18 +72,7 @@ class Store:
         """
         with open(VERSIONS_FILE, 'w') as f:
             json.dump(versions, f, indent=2)
-    
-    @staticmethod
-    def add_version(version: str, directory: str):
-        """Add a new version to the store
-        
-        Args:
-            version: Version of python being added
-            directory: install directory
-        """
-        versions = Store.get_versions()
-        versions.append({"version": version, "dir": directory, "using": "False"})
-        Store.write_versions(versions)
+
     
     @staticmethod
     def remove_version(version: str):
