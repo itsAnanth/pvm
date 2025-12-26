@@ -23,22 +23,41 @@ try {
     exit 1
 }
 
-# Add to user PATH if not already present
-$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
-$pathEntries = $userPath -split ';'
-$installDirExists = $pathEntries | Where-Object { $_.TrimEnd('\') -eq $installDir.TrimEnd('\') }
+$olduserpath = [Environment]::GetEnvironmentVariable("Path", "User")
 
-if (-not $installDirExists) {
-    Write-Host "Adding $installDir to user PATH..." -ForegroundColor Yellow
-    [Environment]::SetEnvironmentVariable(
-        "Path",
-        "$installDir;$userPath",
-        "User"
-    )
-    Write-Host "Added to PATH successfully!" -ForegroundColor Green
-    Write-Host "Please restart your terminal for PATH changes to take effect." -ForegroundColor Yellow
-} else {
-    Write-Host "$installDir is already in PATH" -ForegroundColor Green
+$existingPaths = @()
+if (-not [string]::IsNullOrEmpty($olduserpath)) {
+    $existingPaths = $olduserpath -split ';'
 }
+
+$pathstoadd = @($installDir)
+
+$newPaths = @($existingPaths)
+
+foreach ($pathtoadd in $pathstoadd) {
+    if (-not ($newPaths | Where-Object { $_.TrimEnd('\') -ieq $pathtoadd.TrimEnd('\') })) {
+        $newPaths += $pathtoadd
+    }
+}
+
+$newuserpath = ($newPaths -join ';')
+
+if ([string]::IsNullOrEmpty($newuserpath)) {
+    Write-Error "New PATH is empty - aborting to prevent damage" -ForegroundColor Red
+    exit 1
+}
+
+# Backup existing PATH
+$olduserpath | Out-File (Join-Path $PSScriptRoot "path_backup.txt")
+
+
+$confirmation = Read-Host "Do you want to set the new Path as:`n$newuserpath`n(y/n)" -ForegroundColor Yellow
+if ($confirmation -ne "y") {
+    Write-Host "Operation cancelled by user." -ForegroundColor Red
+    exit 0
+}
+
+[Environment]::SetEnvironmentVariable("Path", $newuserpath, "User")
+Write-Host "PVM installed and added to PATH successfully." -ForegroundColor Green
 
 Write-Host "`nInstallation complete! Run 'pvm' to get started." -ForegroundColor Cyan
