@@ -5,13 +5,13 @@ from argparse import _SubParsersAction, ArgumentParser
 from src.scripts.store import Store
 from src.scripts.arch import detect_arch, is_windows
 
-logger = logging.getLogger("pvm.install")
+logger = logging.getLogger("pvm.use")
 
 def handle_use(args):
     index, version = Store.get_version(args.version)
 
     if not version:
-        logger.error(f"Version {args.version} is not installed. Use pvm install {args.version} to install it.")
+        logger.error(f"Version {args.version} is not installed. Use 'pvm list --all' to see available versions.")
         return
     
     shimsdir = os.path.join(Store.get_pvm_root(), "shims")
