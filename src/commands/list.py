@@ -9,6 +9,7 @@ logger = logging.getLogger("pvm.list")
 def handle_list(args):
     # Show installed versions
     installed = Store.get_versions()
+    installed = sorted(installed, key=lambda v: tuple(map(int, v['version'].split('.'))))
     
     if args.installed or not (args.available or args.all or args.latest):
         if installed:
@@ -22,8 +23,9 @@ def handle_list(args):
             return
     
     if args.available or args.all or args.latest:
-        print("\nAvailable versions:")
+        logger.info("Fetching available Python versions from python.org...")
         versions = get_python_versions()
+        print("\nAvailable versions:")
         
         if args.latest:
             versions = [v for v in versions if v['is_latest']]
