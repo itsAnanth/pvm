@@ -1,0 +1,13 @@
+[project]
+name = "python-version-manager"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14.2"
+dependencies = [
+    "pyinstaller>=6.17.0",
+    "requests>=2.32.5",
+]
+
+[tool.uv]
+cache-dir = "E:/tools/uv/.cache"
