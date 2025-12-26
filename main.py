@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 from src.scripts.store import Store
 from src.scripts.arch import is_windows
 from src.commands.list import list_command
@@ -7,8 +8,11 @@ from src.commands.install import install_command
 from src.commands.use import use_command
 from src.commands.link import link_command
 
+# Use DEBUG in development, INFO in production builds
+log_level = logging.DEBUG if os.getenv('PVM_DEV') == '1' else logging.INFO
+
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=log_level,
     format='[%(asctime)s] [%(levelname)s] [%(name)s] - %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S'
 )

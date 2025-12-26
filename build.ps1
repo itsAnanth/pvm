@@ -1,2 +1,6 @@
-Write-Host "Buildiing python-version-manager executable..."
+Write-Host "Building python-version-manager executable..."
+
+# Set production mode (INFO logging)
+$env:PVM_DEV = "0"
+
 uv run -m PyInstaller --onefile --clean --name pvm main.py
