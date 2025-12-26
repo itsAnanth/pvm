@@ -8,7 +8,7 @@ def get_python_versions():
     data = response.json()
 
     versions = [
-        release for release in data if not release['pre_release'] and "Python install manager" not in release['name']
+        release for release in data if not release['pre_release'] and "Python install manager" not in release['name'] and release['version'] >= 3
     ]
 
     sorted_versions = sorted(
