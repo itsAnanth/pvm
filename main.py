@@ -4,6 +4,7 @@ from src.scripts.store import Store
 from src.scripts.arch import is_windows
 from src.commands.list import list_command
 from src.commands.install import install_command
+from src.commands.use import use_command
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -15,7 +16,7 @@ logger = logging.getLogger("pvm")
 def cli():
 
     if not is_windows():
-        print("This tool is only support for windows.")
+        logger.info("This tool is only support for windows.")
         return
     
     Store.init_store()
@@ -33,6 +34,7 @@ def cli():
 
     list_command(subparsers)
     install_command(subparsers)
+    use_command(subparsers)
 
 
     args = parser.parse_args()
