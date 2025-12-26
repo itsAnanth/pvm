@@ -1,10 +1,14 @@
 import argparse
-from src.scripts.get_versions import get_python_versions
-
+from src.scripts.arch import is_windows
 from src.commands.list import list_command
 from src.commands.install import install_command
 
 def cli():
+
+    if not is_windows():
+        print("This tool is only support for windows.")
+        return
+    
     parser = argparse.ArgumentParser(
         prog="python-version-manager",
         description="Manage Python versions"
