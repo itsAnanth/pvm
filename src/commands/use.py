@@ -9,9 +9,11 @@ logger = logging.getLogger("pvm.use")
 def handle_use(args):
     
     old_index, old_version = Store.get_version(lambda v: v.get("using") is True)
-    old_version['using'] = False
+    
+    if old_version:
+        old_version['using'] = False
 
-    Store.set_version(old_version)
+        Store.set_version(old_version)
     
     index, version = Store.get_version(lambda v: v["version"] == args.version)
 
