@@ -4,6 +4,7 @@ import json
 import logging
 from argparse import _SubParsersAction, ArgumentParser
 
+from src.utils.version import get_pvm_version
 
 logger = logging.getLogger("pvm.update")
 
@@ -27,9 +28,7 @@ def get_latest_release_url(repo_owner, repo_name, asset_name):
         raise
 
 def handle_update(args):
-    logger.info("Updating PVM...")
     
-    # Define paths
     if not os.getenv('LOCALAPPDATA'):
         logger.error("LOCALAPPDATA environment variable not set. Cannot proceed with update.")
         return
@@ -41,6 +40,11 @@ def handle_update(args):
         # Get latest release URL from GitHub API
         logger.info("Fetching latest release information...")
         url, version = get_latest_release_url('itsAnanth', 'pvm', 'pvm.exe')
+
+        if version == get_pvm_version():
+            print(f"You are already using the latest version of PVM. {version}")
+            return
+        
         logger.info(f"Latest version: {version}")
         logger.info(f"Download URL: {url}")
 
