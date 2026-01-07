@@ -8,6 +8,7 @@ from src.commands.install import install_command
 from src.commands.uninstall import uninstall_command
 from src.commands.use import use_command
 from src.commands.link import link_command
+# from src.commands.update import update_command
 
 # Use DEBUG in development, INFO in production builds
 log_level = logging.DEBUG if os.getenv('PVM_DEV') == '1' else logging.INFO
@@ -43,6 +44,7 @@ def cli():
     uninstall_command(subparsers)
     use_command(subparsers)
     link_command(subparsers)
+    # update_command(subparsers)
 
 
     args = parser.parse_args()
