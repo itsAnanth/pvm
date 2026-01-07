@@ -13,6 +13,11 @@ from src.commands.update import update_command
 # Use DEBUG in development, INFO in production builds
 log_level = logging.DEBUG if os.getenv('PVM_DEV') == '1' else logging.INFO
 
+try:
+    from src._version import VERSION
+except ImportError:
+    VERSION = "dev"
+
 logging.basicConfig(
     level=log_level,
     format='[%(asctime)s] [%(levelname)s] [%(name)s] - %(message)s',
@@ -31,6 +36,13 @@ def cli():
     parser = argparse.ArgumentParser(
         prog="pvm",
         description="A lightweight Python version manager for Windows. Install, manage, and switch between multiple Python versions with ease. Downloads official embeddable Python distributions, maintains isolated installations, and uses shims for seamless version switching without modifying system settings or registry."
+    )
+
+    parser.add_argument(
+        '--version',
+        action='version',
+        version=f'pvm {VERSION}',
+        help='Shows the version of pvm installed'
     )
 
     subparsers = parser.add_subparsers(

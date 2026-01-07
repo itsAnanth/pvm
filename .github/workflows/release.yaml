@@ -35,6 +35,8 @@ jobs:
         run: uv sync --locked --all-extras --dev
 
       - name: Run PowerShell build script
+        env:
+          PVM_VERSION: ${{ github.ref_name }}
         shell: pwsh
         run: |
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
