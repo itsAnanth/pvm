@@ -16,7 +16,7 @@ jobs:
 
     env:
       # Configure a constant location for the uv cache
-      UV_CACHE_DIR: /tmp/.uv-cache
+      UV_CACHE_DIR: ${{ runner.temp }}\.uv-cache
 
     steps:
       - name: Checkout repository
@@ -45,8 +45,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
           generate_release_notes: true
@@ -57,6 +57,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist # Path to the file you want to upload
+          asset_path: ./dist/pvm.exe
           asset_name: pvm.exe
           asset_content_type: application/octet-stream
