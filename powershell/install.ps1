@@ -1,22 +1,30 @@
 # PVM Installer for Windows
 # Downloads pvm.exe and adds it to user PATH
 
-param(
-    [switch]$Update
-)
+# Fetch latest release from GitHub API
+Write-Host "Fetching latest release information..." -ForegroundColor Yellow
+try {
+    $apiUrl = "https://api.github.com/repos/itsAnanth/pvm/releases/latest"
+    $releaseInfo = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing
+    $version = $releaseInfo.tag_name
+    
+    # Find the pvm.exe asset
+    $asset = $releaseInfo.assets | Where-Object { $_.name -eq "pvm.exe" }
+    if (-not $asset) {
+        throw "pvm.exe not found in latest release assets"
+    }
+    
+    $url = $asset.browser_download_url
+    Write-Host "Latest version: $version" -ForegroundColor Green
+} catch {
+    Write-Host "Failed to fetch latest release info: $_" -ForegroundColor Red
+    exit 1
+}
 
-# Check for update flag from environment variable or parameter
-$isUpdate = $Update -or ($env:PVM_UPDATE -eq '1')
-
-$url = "https://github.com/itsAnanth/pvm/releases/download/v1.0.0/pvm.exe"
 $installDir = "$env:LOCALAPPDATA\.pvm"
 $exePath = "$installDir\pvm.exe"
 
-if ($isUpdate -and (Test-Path $exePath)) {
-    Write-Host "Updating existing PVM installation..." -ForegroundColor Cyan
-} elseif (-not $isUpdate) {
-    Write-Host "Fresh installation of PVM..." -ForegroundColor Cyan
-}
+Write-Host "Installing PVM..." -ForegroundColor Cyan
 
 # Create installation directory
 if (-not (Test-Path $installDir)) {
@@ -73,11 +81,5 @@ $olduserpath | Out-File (Join-Path $installDir "path_backup.txt")
 
 [Environment]::SetEnvironmentVariable("Path", $newuserpath, "User")
 
-if ($isUpdate) {
-    Write-Host "PVM updated and PATH modified successfully." -ForegroundColor Green
-    Write-Host "`nUpdation complete! run 'pvm' to get started." -ForegroundColor Cyan
-} else {
-    Write-Host "PVM installed and added to PATH successfully." -ForegroundColor Green
-    Write-Host "`nInstallation complete! Restart your terminal and run 'pvm' to get started." -ForegroundColor Cyan
-
-}
+Write-Host "PVM installed and added to PATH successfully." -ForegroundColor Green
+Write-Host "`nInstallation complete! PVM $version installed. Restart your terminal and run 'pvm' to get started." -ForegroundColor Cyan
