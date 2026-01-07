@@ -75,8 +75,9 @@ $olduserpath | Out-File (Join-Path $installDir "path_backup.txt")
 
 if ($isUpdate) {
     Write-Host "PVM updated and PATH modified successfully." -ForegroundColor Green
+    Write-Host "`nUpdation complete! run 'pvm' to get started." -ForegroundColor Cyan
 } else {
     Write-Host "PVM installed and added to PATH successfully." -ForegroundColor Green
-}
+    Write-Host "`nInstallation complete! Restart your terminal and run 'pvm' to get started." -ForegroundColor Cyan
 
-Write-Host "`nInstallation complete! Restart your terminal and run 'pvm' to get started." -ForegroundColor Cyan
+}
