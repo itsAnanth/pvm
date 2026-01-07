@@ -3,6 +3,7 @@ import logging
 from argparse import _SubParsersAction, ArgumentParser
 
 from src.scripts.store import Store
+from src.scripts.shims import generate_shims
 
 logger = logging.getLogger("pvm.use")
 
@@ -21,36 +22,16 @@ def handle_use(args):
         logger.error(f"Version {args.version} is not installed. Use 'pvm list --all' to see available versions.")
         return
     
-    shimsdir = os.path.join(Store.get_pvm_root(), "shims")
 
     logger.debug(version)
 
-    
-    python_exe = os.path.join(version['dir'], 'python.exe')
-    
-    # Create python.cmd shim
-    python_shim = os.path.join(shimsdir, 'python.cmd')
-    with open(python_shim, 'w') as f:
-        f.write(f'@echo off\n')
-        f.write(f'"{python_exe}" %*\n')
-    
-
-    
-    # Create pip.cmd shim
-    pip_shim = os.path.join(shimsdir, 'pip.cmd')
-    with open(pip_shim, 'w') as f:
-        f.write(f'@echo off\n')
-        f.write(f'"{python_exe}" -m pip %*\n')
-    
-    logger.info(f"Using Python {args.version}")
-
-    version['using'] = True
-    Store.set_version(version)
+    if generate_shims(version):
+        version['using'] = True
+        Store.set_version(version)
+        print(f"Using Python {args.version}")
 
 
 
-    
-    
 
 
 def use_command(sub_parser: _SubParsersAction[ArgumentParser]):
