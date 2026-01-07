@@ -99,9 +99,8 @@ def install_command(sub_parser: _SubParsersAction[ArgumentParser]):
 
 
     parser.add_argument(
-        '--dir',
+        'dir',
         help='Installation directory',
-        required=True
     )
 
     parser.set_defaults(func=handle_install)
