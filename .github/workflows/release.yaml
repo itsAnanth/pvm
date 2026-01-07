@@ -13,10 +13,10 @@ permissions:
 jobs:
   build:
     runs-on: windows-latest
-
+    
     env:
-      # Configure a constant location for the uv cache
-      UV_CACHE_DIR: ${{ runner.temp }}\.uv-cache
+      UV_CACHE_DIR: $RUNNER_TEMP\.uv-cache
+
 
     steps:
       - name: Checkout repository
